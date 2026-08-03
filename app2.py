@@ -8,7 +8,7 @@ import os
 # ==========================================
 # 1. 初始化與 API 設定
 # ==========================================
-API_KEY = "AQ.Ab8RN6KGrTcgzZ5yt6vG3Z4ERVmkPvqG440d9NwaT__uEqIRyQ" 
+API_KEY = st.secrets["AQ.Ab8RN6KGrTcgzZ5yt6vG3Z4ERVmkPvqG440d9NwaT__uEqIRyQ"]
 
 st.set_page_config(page_title="AI 服務體驗研究", page_icon="🤖")
 
