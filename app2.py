@@ -13,8 +13,11 @@ API_KEY = st.secrets["GOOGLE_API_KEY"]
 st.set_page_config(page_title="AI 服務體驗研究", page_icon="🤖")
 
 if "client" not in st.session_state:
-    # 明確指定 api="gemini"，強制它走標準開發者 API 通道，完美支援 AQ. 開頭金鑰
-    st.session_state.client = genai.Client(api_key=API_KEY, http_options={"api_version": "v1beta"})
+    # 透過 http_options 強制將金鑰放入正確的 Header 中，避開 Token 誤判問題
+    st.session_state.client = genai.Client(
+        api_key=API_KEY, 
+        http_options={"headers": {"x-goog-api-key": API_KEY}}
+    )
 client = st.session_state.client
 
 # 狀態管理
