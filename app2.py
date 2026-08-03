@@ -94,7 +94,7 @@ elif st.session_state.pre_survey_completed and st.session_state.context_style is
             """
             
             result_response = client.models.generate_content(
-                model="gemini-3.5-flash-lite",
+                model="gemini-2.5-flash",
                 contents=analysis_prompt
             )
             result = result_response.text.strip()
@@ -120,7 +120,7 @@ elif st.session_state.pre_survey_completed and st.session_state.context_style is
             
             config = types.GenerateContentConfig(system_instruction=system_instruction)
             st.session_state.chat_session = client.chats.create(
-                model="gemini-3.5-flash-lite",
+                model="gemini-2.5-flash",
                 config=config
             )
             
