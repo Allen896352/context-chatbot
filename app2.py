@@ -13,7 +13,8 @@ API_KEY = st.secrets["GOOGLE_API_KEY"]
 st.set_page_config(page_title="AI 服務體驗研究", page_icon="🤖")
 
 if "client" not in st.session_state:
-    st.session_state.client = genai.Client(api_key=API_KEY)
+    # Explicitly set vertexai=False to force the use of the Gemini API endpoint
+    st.session_state.client = genai.Client(api_key=API_KEY, vertexai=False)
 client = st.session_state.client
 
 # 狀態管理
@@ -94,7 +95,7 @@ elif st.session_state.pre_survey_completed and st.session_state.context_style is
             """
             
             result_response = client.models.generate_content(
-                model="gemini-2.5-flash",
+                model="gemini-3.5-flash-lite",
                 contents=analysis_prompt
             )
             result = result_response.text.strip()
@@ -120,7 +121,7 @@ elif st.session_state.pre_survey_completed and st.session_state.context_style is
             
             config = types.GenerateContentConfig(system_instruction=system_instruction)
             st.session_state.chat_session = client.chats.create(
-                model="gemini-2.5-flash",
+                model="gemini-3.5-flash-lite",
                 config=config
             )
             
