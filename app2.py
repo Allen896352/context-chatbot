@@ -6,18 +6,30 @@ from datetime import datetime
 import os
 
 # ==========================================
-# 1. 初始化與 API 設定
+# 1. 暴力清除干擾的環境變數 (避免 SDK 誤抓 Streamlit 內建憑證)
+# ==========================================
+os.environ.pop("GOOGLE_APPLICATION_CREDENTIALS", None)
+os.environ.pop("GOOGLE_CLOUD_PROJECT", None)
+os.environ.pop("GOOGLE_GENAI_USE_VERTEXAI", None)
+
+# ==========================================
+# 2. 讀取金鑰與強制防呆檢查
 # ==========================================
 API_KEY = st.secrets["GOOGLE_API_KEY"]
 
+# 檢查金鑰是否真的有被讀到，如果沒有就立刻停止並報錯在畫面上
+if not API_KEY or len(API_KEY) < 20:
+    st.error("🛑 系統根本沒有讀到你的金鑰！請回到 Streamlit 後台確認 Secrets 是否有成功儲存，且名稱必須是 GOOGLE_API_KEY。")
+    st.stop()
+
+# ==========================================
+# 3. 初始化與 API 設定
+# ==========================================
 st.set_page_config(page_title="AI 服務體驗研究", page_icon="🤖")
 
 if "client" not in st.session_state:
-    # 透過 http_options 強制將金鑰放入正確的 Header 中，避開 Token 誤判問題
-    st.session_state.client = genai.Client(
-        api_key=API_KEY, 
-        http_options={"headers": {"x-goog-api-key": API_KEY}}
-    )
+    # 乾乾淨淨地初始化，不需要加多餘的 http_options 參數了
+    st.session_state.client = genai.Client(api_key=API_KEY)
 client = st.session_state.client
 
 # 狀態管理
