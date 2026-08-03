@@ -13,8 +13,8 @@ API_KEY = st.secrets["GOOGLE_API_KEY"]
 st.set_page_config(page_title="AI 服務體驗研究", page_icon="🤖")
 
 if "client" not in st.session_state:
-    # Explicitly set vertexai=False to force the use of the Gemini API endpoint
-    st.session_state.client = genai.Client(api_key=API_KEY, vertexai=False)
+    # 明確指定 api="gemini"，強制它走標準開發者 API 通道，完美支援 AQ. 開頭金鑰
+    st.session_state.client = genai.Client(api_key=API_KEY, http_options={"api_version": "v1beta"})
 client = st.session_state.client
 
 # 狀態管理
