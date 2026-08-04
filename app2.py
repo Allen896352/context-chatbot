@@ -113,7 +113,7 @@ elif st.session_state.pre_survey_completed and st.session_state.context_style is
             請只回答「高語境」或「低語境」三個字。
             """
             
-           result_response = model.generate_content(analysis_prompt)
+            result_response = model.generate_content(analysis_prompt)
             result = result_response.text.strip()
             
             st.session_state.onboarding_text = user_input
