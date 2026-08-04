@@ -28,8 +28,7 @@ st.set_page_config(page_title="AI 服務體驗研究", page_icon="🤖")
 
 st.set_page_config(page_title="AI 服務體驗研究", page_icon="🤖")
 
-# 使用舊版穩定套件的全局設定方式
-genai.configure(api_key=API_KEY)
+genai.configure(api_key=API_KEY, transport="rest")
 
 # 改為初始化 GenerativeModel，並存在 session_state 中
 if "model" not in st.session_state:
