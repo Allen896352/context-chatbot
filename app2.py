@@ -1,6 +1,5 @@
 import streamlit as st
-from google import genai
-from google.genai import types
+import google.generativeai as genai
 import csv
 from datetime import datetime
 import os
@@ -27,10 +26,15 @@ if not API_KEY or len(API_KEY) < 20:
 # ==========================================
 st.set_page_config(page_title="AI 服務體驗研究", page_icon="🤖")
 
-if "client" not in st.session_state:
-    # 乾乾淨淨地初始化，不需要加多餘的 http_options 參數了
-    st.session_state.client = genai.Client(api_key=API_KEY)
-client = st.session_state.client
+st.set_page_config(page_title="AI 服務體驗研究", page_icon="🤖")
+
+# 使用舊版穩定套件的全局設定方式
+genai.configure(api_key=API_KEY)
+
+# 改為初始化 GenerativeModel，並存在 session_state 中
+if "model" not in st.session_state:
+    st.session_state.model = genai.GenerativeModel('gemini-1.5-flash')
+model = st.session_state.model
 
 # 狀態管理
 if "pre_survey_completed" not in st.session_state:
@@ -109,10 +113,7 @@ elif st.session_state.pre_survey_completed and st.session_state.context_style is
             請只回答「高語境」或「低語境」三個字。
             """
             
-            result_response = client.models.generate_content(
-                model="gemini-1.5-flash",
-                contents=analysis_prompt
-            )
+           result_response = model.generate_content(analysis_prompt)
             result = result_response.text.strip()
             
             st.session_state.onboarding_text = user_input
@@ -134,11 +135,11 @@ elif st.session_state.pre_survey_completed and st.session_state.context_style is
                 3. 資訊完整：務必使用「條列式」或「表格」來整理重點，追求最高效率的資訊傳遞。
                 """
             
-            config = types.GenerateContentConfig(system_instruction=system_instruction)
-            st.session_state.chat_session = client.chats.create(
-                model="gemini-1.5-flash",
-                config=config
+           chat_model = genai.GenerativeModel(
+                model_name="gemini-1.5-flash",
+                system_instruction=system_instruction
             )
+            st.session_state.chat_session = chat_model.start_chat(history=[])
             
             st.session_state.messages.append({"role": "assistant", "content": "您好，設定已完成。請問今天有什麼我可以協助您的嗎？（請隨意與我進行幾次對話測試）"})
             st.rerun()
