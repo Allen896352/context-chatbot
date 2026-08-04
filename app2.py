@@ -135,10 +135,9 @@ elif st.session_state.pre_survey_completed and st.session_state.context_style is
                 3. 資訊完整：務必使用「條列式」或「表格」來整理重點，追求最高效率的資訊傳遞。
                 """
             
-           chat_model = genai.GenerativeModel(
+            chat_model = genai.GenerativeModel(
                 model_name="gemini-1.5-flash",
-                system_instruction=system_instruction
-            )
+                system_instruction=system_instruction )
             st.session_state.chat_session = chat_model.start_chat(history=[])
             
             st.session_state.messages.append({"role": "assistant", "content": "您好，設定已完成。請問今天有什麼我可以協助您的嗎？（請隨意與我進行幾次對話測試）"})
